@@ -18,7 +18,6 @@ public class VideoPanel : MonoBehaviour {
 
     void Awake() {
         timeout = InitialTimeout;
-
         Player.Events.AddListener((mp, e, code) => {
             switch (e) {
                 case MediaPlayerEvent.EventType.Closing:

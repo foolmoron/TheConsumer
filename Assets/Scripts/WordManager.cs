@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using RenderHeads.Media.AVProVideo;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class Word {
@@ -19,8 +20,12 @@ public class WordManager : Manager<WordManager> {
     public string BaseUrl = "https://api.datamuse.com/words?max=10&ml=";
 
     public GameObject WordPrefab;
-
-    public GameObject WordContainer;
+    public RectTransform WordContainer;
+    [Range(0, 3)]
+    public float WordInterval = 1f;
+    [Range(0, 3)]
+    public float WordIntervalRandomness = 0.5f;
+    float wordTime;
 
     public class WordBank {
         public Queue<Word> AvailableWords = new Queue<Word>(20);
@@ -34,10 +39,12 @@ public class WordManager : Manager<WordManager> {
 
     public class WordRequest {
         public string Tag;
+        public string Word;
         public WWW Request;
 
         public WordRequest(string baseUrl, string tag, string word) {
             Tag = tag;
+            Word = word;
             Request = new WWW(baseUrl + WWW.EscapeURL(word));
         }
     }
@@ -78,8 +85,24 @@ public class WordManager : Manager<WordManager> {
                 foreach (var word in words) {
                     bank.AvailableWords.Enqueue(word);
                 }
-                Debug.Log("WORDS FOR " + request.Tag + ": " + string.Join(", ", bank.AvailableWords.ToList().Map(x => x.word)));
-                Debug.Log("NEXT FOR " + request.Tag + ": " + bank.NextQueryWord);
+                //Debug.Log("WORDS FOR " + request.Tag + " (" + request.Word + "): " + string.Join(", ", bank.AvailableWords.ToList().Map(x => x.word)));
+                //Debug.Log("NEXT FOR " + request.Tag + " (" + request.Word + "): " + bank.NextQueryWord);
+            }
+        }
+        // new words
+        wordTime -= Time.deltaTime;
+        if (wordTime <= 0) {
+            var playingPanel = VideoManager.Inst.Panels.RandomWhere(p => p.CurrentState == VideoState.Playing);
+            if (playingPanel != null) {
+                wordTime = WordInterval + Mathf.Lerp(-WordIntervalRandomness, WordIntervalRandomness, Random.value);
+                var wordObj = Instantiate(WordPrefab);
+                var word = wordObj.GetComponent<ScrollingWord>();
+                word.TextMesh.text = GrabWordForTag(playingPanel.Link.tag) ?? "XXXXXXXXX";
+                word.Container = WordContainer;
+                word.transform.parent = WordContainer;
+                word.transform.localScale = Vector3.one;
+                word.RelativePos = word.RelativePos.withY(Random.value);
+                word.RelativeVel = word.RelativeVel.withX(word.RelativeVel.x * Mathf.Lerp(0.8f, 1.25f, Random.value));
             }
         }
     }
