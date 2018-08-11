@@ -18,7 +18,7 @@ public class VideoPanel : MonoBehaviour {
                     CurrentState = MediaPlayerEvent.EventType.Closing;
                     break;
                 case MediaPlayerEvent.EventType.Error:
-                    Debug.LogError("Broken vid: " + Link.tag + " " + Link.title);
+                    Debug.LogError("Broken vid: " + Link.tag + " || " + Link.title);
                     CurrentState = MediaPlayerEvent.EventType.Error;
                     break;
                 case MediaPlayerEvent.EventType.Started:
