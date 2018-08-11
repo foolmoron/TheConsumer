@@ -45,7 +45,7 @@ MonoBehaviour:
   m_VideoPath: https://archive.org/download/FromtheG1954/FromtheG1954_512kb.mp4
   m_AutoOpen: 0
   m_AutoStart: 0
-  m_Loop: 1
+  m_Loop: 0
   m_Volume: 1
   m_Balance: 0
   m_Muted: 1

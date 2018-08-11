@@ -18,7 +18,7 @@ public class VideoManager : Manager<VideoManager> {
 
     public TextAsset DataJSON;
     public VideoLink[] Links;
-    public List<VideoLink> UsedLinks = new List<VideoLink>(50);
+    public List<string> UsedTags = new List<string>(50);
 
     public GameObject VideoPanelPrefab;
     GameObject nextVideoPanel;
@@ -34,8 +34,8 @@ public class VideoManager : Manager<VideoManager> {
     }
 
     public VideoLink GetUnusedLink() {
-        var link = Links.RandomWhere(UsedLinks, (l, used) => !used.Contains(l));
-        UsedLinks.Add(link);
+        var link = Links.RandomWhere(UsedTags, (l, used) => !used.Contains(l.tag));
+        UsedTags.Add(link.tag);
         return link;
     }
 
@@ -62,7 +62,7 @@ public class VideoManager : Manager<VideoManager> {
     public void Stop() {
         Panels.ForEach(p => Destroy(p.gameObject));
         Panels.Clear();
-        UsedLinks.Clear();
+        UsedTags.Clear();
     }
 
     void Update() {

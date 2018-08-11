@@ -263,4 +263,9 @@ public static class ArrayExtensions {
         }
         return count;
     }
+
+    public static TVal Get<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey key) {
+        TVal item;
+        return dict.TryGetValue(key, out item) ? item : default(TVal);
+    }
 }
