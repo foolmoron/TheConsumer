@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Loop: 1
   m_Volume: 1
   m_Balance: 0
-  m_Muted: 0
+  m_Muted: 1
   m_PlaybackRate: 1
   m_Resample: 0
   m_ResampleMode: 0
@@ -164,6 +164,9 @@ MonoBehaviour:
     title: 
     vid: 
   CurrentState: 5
+  ShouldPlay: 0
+  LoadingTimeout: 6
+  Player: {fileID: 114108352621948936}
 --- !u!114 &114830715067079032
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -175,7 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f17cdc186456a4469a139a104d2ca72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: da6238c7d6fcf8a4bb6d4f4ac707d243, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
