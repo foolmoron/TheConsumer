@@ -10,12 +10,15 @@ public class VideoPanel : MonoBehaviour {
     public VideoState CurrentState = VideoState.None;
     public bool ShouldPlay;
     [Range(0, 10)]
-    public float LoadingTimeout = 6f;
+    public float InitialTimeout = 3f;
+    float timeout;
     float loadingTime;
 
     public MediaPlayer Player;
 
     void Awake() {
+        timeout = InitialTimeout;
+
         Player.Events.AddListener((mp, e, code) => {
             switch (e) {
                 case MediaPlayerEvent.EventType.Closing:
@@ -42,13 +45,15 @@ public class VideoPanel : MonoBehaviour {
         // loading timeout
         if (ShouldPlay && CurrentState == VideoState.Loading) {
             loadingTime += Time.deltaTime;
-            if (loadingTime >= LoadingTimeout) {
-                Debug.LogError("TIMEOUT VID: " + Link.tag + " || " + Link.title);
+            if (loadingTime >= timeout) {
+                Debug.LogError("TIMEOUT " + timeout + " VID: " + Link.tag + " || " + Link.title);
                 CurrentState = VideoState.Error;
+                timeout *= 2;
             }
         }
         if (!ShouldPlay || CurrentState != VideoState.Loading) {
             loadingTime = 0;
+            timeout = InitialTimeout;
         }
         // ready to waiting
         if (ShouldPlay && CurrentState == VideoState.Ready) {
