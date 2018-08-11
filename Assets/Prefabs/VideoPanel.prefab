@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224245787077809790}
   - component: {fileID: 222153526893612550}
+  - component: {fileID: 114481728791764374}
   - component: {fileID: 114830715067079032}
   - component: {fileID: 114108352621948936}
   m_Layer: 0
@@ -42,8 +43,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_VideoLocation: 0
   m_VideoPath: https://archive.org/download/FromtheG1954/FromtheG1954_512kb.mp4
-  m_AutoOpen: 1
-  m_AutoStart: 1
+  m_AutoOpen: 0
+  m_AutoStart: 0
   m_Loop: 1
   m_Volume: 1
   m_Balance: 0
@@ -147,6 +148,21 @@ MonoBehaviour:
     overridePath: 0
     pathLocation: 2
     path: 
+--- !u!114 &114481728791764374
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1772076686535022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e010155cca3923d4dbf3274119085b98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Link:
+    tag: 
+    title: 
+    vid: 
 --- !u!114 &114830715067079032
 MonoBehaviour:
   m_ObjectHideFlags: 1
