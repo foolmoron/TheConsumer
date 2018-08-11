@@ -163,6 +163,7 @@ MonoBehaviour:
     tag: 
     title: 
     vid: 
+  CurrentState: 5
 --- !u!114 &114830715067079032
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -174,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f17cdc186456a4469a139a104d2ca72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: da6238c7d6fcf8a4bb6d4f4ac707d243, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
