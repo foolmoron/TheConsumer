@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
-using RenderHeads.Media.AVProVideo;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class VideoLink {
@@ -25,6 +25,8 @@ public class VideoManager : Manager<VideoManager> {
 
     public GameObject PanelContainer;
     public List<VideoPanel> Panels = new List<VideoPanel>(32);
+
+    public AudioClip NewVidSound;
 
     void Awake() {
         Links = JsonUtility.FromJson<VideoLinks>(DataJSON.text).links;
@@ -66,6 +68,8 @@ public class VideoManager : Manager<VideoManager> {
         Panels.Add(vid);
 
         SetupNextVideo();
+
+        NewVidSound.Play(pitch: Mathf.Lerp(0.9f, 1.1f, Random.value));
     }
 
     void Update() {

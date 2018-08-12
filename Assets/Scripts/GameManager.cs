@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Random = UnityEngine.Random;
 
 public class GameManager : Manager<GameManager> {
 
@@ -32,10 +33,15 @@ public class GameManager : Manager<GameManager> {
     public TextMeshProUGUI AllScoresText;
     public TextMeshProUGUI OpinionText;
 
+    public AudioClip CorrectSound;
+    public AudioClip WrongSound;
+
     new Camera camera;
+    new AudioSource audio;
     
     void Awake() {
         camera = Camera.main;
+        audio = GetComponent<AudioSource>();
         ScoreContainer.SetActive(false);
     }
 
@@ -79,6 +85,8 @@ public class GameManager : Manager<GameManager> {
                 }
             }
         }
+        // audio
+        audio.mute = timeToKillStaticEnd <= 0;
     }
 
     public void SpawnStatic(RectTransform rt) {
@@ -103,9 +111,11 @@ public class GameManager : Manager<GameManager> {
     }
     public void HitCorrect() {
         Score += Math.Floor(Math.Pow(BaseScore, 1 + VideoManager.Inst.Panels.Count * Exponent));
+        CorrectSound.Play(pitch: Mathf.Lerp(0.9f, 1.1f, Random.value));
     }
     public void HitWrong() {
         Score -= Math.Floor(Score / 2);
+        WrongSound.Play(pitch: Mathf.Lerp(0.9f, 1.1f, Random.value));
     }
 
     public void Stop() {

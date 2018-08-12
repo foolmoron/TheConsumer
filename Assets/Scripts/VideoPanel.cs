@@ -33,7 +33,7 @@ public class VideoPanel : MonoBehaviour {
         Player.Events.AddListener((mp, e, code) => {
             switch (e) {
                 case MediaPlayerEvent.EventType.Closing:
-                case MediaPlayerEvent.EventType.FinishedPlaying:
+                case MediaPlayerEvent.EventType.FinishedPlaying :
                     CurrentState = VideoState.None;
                     break;
                 case MediaPlayerEvent.EventType.Error:
