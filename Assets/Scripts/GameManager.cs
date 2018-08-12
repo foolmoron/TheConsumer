@@ -2,10 +2,13 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 public class GameManager : Manager<GameManager> {
 
     public double Score;
+    public int HighestPanels;
+    public float HighestPanelsTime;
     public double HighScore;
 
     [Range(0, 20)]
@@ -20,10 +23,20 @@ public class GameManager : Manager<GameManager> {
     public Color CorrectColor = Color.green;
     public Color WrongColor = Color.red;
 
+    public GameObject StaticEndPrefab;
+    RectTransform staticEnd;
+    float timeToKillStaticEnd;
+    public bool Paused;
+
+    public GameObject ScoreContainer;
+    public TextMeshProUGUI AllScoresText;
+    public TextMeshProUGUI OpinionText;
+
     new Camera camera;
     
     void Awake() {
         camera = Camera.main;
+        ScoreContainer.SetActive(false);
     }
 
     void Update() {
@@ -44,6 +57,28 @@ public class GameManager : Manager<GameManager> {
                 }
             }
         }
+        // panel score
+        {
+            if (VideoManager.Inst.Panels.Count > HighestPanels) {
+                ScoreContainer.SetActive(false);
+                HighestPanels = VideoManager.Inst.Panels.Count;
+                HighestPanelsTime = 0;
+            }
+            HighestPanelsTime += Time.deltaTime;
+        }
+        // inflation
+        {
+            //TODO: compound inflation based on # of panels
+        }
+        // end
+        {
+            if (!Paused && timeToKillStaticEnd > 0 && staticEnd) {
+                timeToKillStaticEnd -= Time.deltaTime;
+                if (timeToKillStaticEnd <= 0) {
+                    Destroy(staticEnd.gameObject);
+                }
+            }
+        }
     }
 
     public void SpawnStatic(RectTransform rt) {
@@ -56,7 +91,7 @@ public class GameManager : Manager<GameManager> {
         Destroy(stat.gameObject, StaticTime);
     }
 
-    //TODO(momin): combo system/momentum, losing points with more extreme momentum
+    //TODO(momin): combo system/momentum, losing points with more extreme momentum, lose flat # of points based on panels, game over on negative
     public VideoPanel HitTag(string tag) {
         var vid = VideoManager.Inst.Panels.Find(tag, (p, t) => p.Link.tag == t);
         if (vid) {
@@ -67,9 +102,64 @@ public class GameManager : Manager<GameManager> {
         return vid;
     }
     public void HitCorrect() {
-        Score += Math.Floor(Math.Pow(BaseScore, 1 + VideoManager.Inst.Panels.Count * Exponent)) * 10;
+        Score += Math.Floor(Math.Pow(BaseScore, 1 + VideoManager.Inst.Panels.Count * Exponent));
     }
     public void HitWrong() {
-        Score -= Math.Floor(Score / 20) * 10;
+        Score -= Math.Floor(Score / 2);
     }
+
+    public void Stop() {
+        if (VideoManager.Inst.Panels.Count < 1) {
+            return;
+        }
+        // high score
+        var score = (long)Score;
+        long prevHigh;
+        prevHigh = long.TryParse(PlayerPrefs.GetString("high"), out prevHigh) ? prevHigh : 0;
+        PlayerPrefs.SetString("high", Math.Max(score, prevHigh).ToString());
+        // high panels
+        var scaledTime = HighestPanels * HighestPanelsTime;
+        var prevPanels = PlayerPrefs.GetInt("panels");
+        var prevTime = PlayerPrefs.GetFloat("time");
+        var prevScaledTime = prevPanels * prevTime;
+        if (scaledTime > prevScaledTime) {
+            PlayerPrefs.SetInt("panels", HighestPanels);
+            PlayerPrefs.SetFloat("time", HighestPanelsTime);
+        }
+        // display score
+        ScoreContainer.SetActive(true);
+        AllScoresText.text = 
+            $"You gained {score} awareness\n" +
+            $"You consumed {HighestPanels} panel{(HighestPanels == 1 ? "" : "s")} for {HighestPanelsTime:0.00} seconds\n\n" +
+            $"Best awareness: {PlayerPrefs.GetString("high")}\n" +
+            $"Best consumption: {PlayerPrefs.GetInt("panels")}p x {PlayerPrefs.GetFloat("time"):0.00}s"
+            ;
+        OpinionText.text = "Hey";
+        // static
+        staticEnd = Instantiate(StaticEndPrefab, FindObjectOfType<Canvas>().transform).GetComponent<RectTransform>();
+        staticEnd.anchorMin = Vector2.zero;
+        staticEnd.anchorMax = Vector2.one;
+        staticEnd.anchoredPosition = Vector2.zero;
+        staticEnd.sizeDelta = Vector2.zero;
+        timeToKillStaticEnd = 1.5f;
+        // reset
+        Score = 0;
+        HighestPanels = 0;
+        HighestPanelsTime = 0;
+        FindObjectsOfType<ScrollingWord>().ForEach(s => Destroy(s.gameObject));
+        FindObjectsOfType<GoToVideo>().ForEach(v => Destroy(v.gameObject));
+        VideoManager.Inst.Panels.ForEach(p => Destroy(p.gameObject));
+        VideoManager.Inst.Panels.Clear();
+        VideoManager.Inst.UsedTags.Clear();
+    }
+
+    private void OnApplicationPause(bool pause) {
+        if (pause && VideoManager.Inst.Panels.Count > 0) {
+            Stop();
+            timeToKillStaticEnd = 0.6f;
+        }
+        Paused = pause;
+    }
+
+
 }

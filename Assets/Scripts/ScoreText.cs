@@ -16,6 +16,7 @@ public class ScoreText : MonoBehaviour {
     }
 
     void Update() {
-        tm.text = ((long)GameManager.Inst.Score).ToString();
+        tm.text = ((long)GameManager.Inst.Score) + "0";
+        tm.enabled = VideoManager.Inst.Panels.Count > 0;
     }
 }

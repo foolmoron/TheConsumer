@@ -7,6 +7,7 @@
         _FuzzinessY ("Fuzziness Y", Float) = 1000
         _ScaleX ("Scale X", Float) = 1
         _ScaleY ("Scale Y", Float) = 3
+        _Power ("Power", Float) = 1.5
 	}
 	SubShader
 	{
@@ -27,6 +28,7 @@
             float _FuzzinessY;
             float _ScaleX;
             float _ScaleY;
+            float _Power;
 
 			struct appdata
 			{
@@ -60,6 +62,7 @@
 
                 i.uv.x += 2.0*sin(i.uv.y*0.2+_Time.w*0.1);
                 float lum = rand(_ScaleX*floor(i.uv.x*_FuzzinessX)/_FuzzinessX + _ScaleY*floor(i.uv.y*_FuzzinessY)/_FuzzinessY + abs(sin(_Time.w*0.15 + i.uv.y*0.003)));
+                lum = pow(lum, _Power);
                 fixed4 finalColor = float4(lum, lum, lum, 1);
 
 				return finalColor;

@@ -68,12 +68,6 @@ public class VideoManager : Manager<VideoManager> {
         SetupNextVideo();
     }
 
-    public void Stop() {
-        Panels.ForEach(p => Destroy(p.gameObject));
-        Panels.Clear();
-        UsedTags.Clear();
-    }
-
     void Update() {
         // gridify vids
         {
