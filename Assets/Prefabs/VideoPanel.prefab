@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Loop: 0
   m_Volume: 1
   m_Balance: 0
-  m_Muted: 1
+  m_Muted: 0
   m_PlaybackRate: 1
   m_Resample: 0
   m_ResampleMode: 0

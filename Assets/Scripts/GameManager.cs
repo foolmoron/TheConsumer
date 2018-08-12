@@ -153,6 +153,7 @@ public class GameManager : Manager<GameManager> {
         VideoManager.Inst.UsedTags.Clear();
     }
 
+#if !DEBUG
     private void OnApplicationPause(bool pause) {
         if (pause && VideoManager.Inst.Panels.Count > 0) {
             Stop();
@@ -160,6 +161,6 @@ public class GameManager : Manager<GameManager> {
         }
         Paused = pause;
     }
-
+#endif
 
 }
