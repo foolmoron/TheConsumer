@@ -57,6 +57,10 @@ public class GameManager : Manager<GameManager> {
 
     public AudioSource WrongStatic;
 
+    public GameObject PointsPrefab;
+    public Color PointsCorrect;
+    public Color PointsWrong;
+
     new Camera camera;
     new AudioSource audio;
     
@@ -147,6 +151,16 @@ public class GameManager : Manager<GameManager> {
         Destroy(stat.gameObject, StaticTime);
     }
 
+    public void Text(double val) {
+        var pts = Instantiate(PointsPrefab, ScoreContainer.transform.parent);
+        pts.GetComponent<TextMeshProUGUI>().color = PointsWrong;
+        pts.GetComponent<TextMeshProUGUI>().text = (val > 0 ? "+" : "-") + (long)Math.Abs(val) + "0";
+        var rt = pts.GetComponent<RectTransform>();
+        rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, rt.anchoredPosition.y * Mathf.Lerp(0.9f, 1.2f, Random.value));
+        pts.GetComponent<TextMeshProUGUI>().margin = new Vector4(rt.parent.GetComponent<RectTransform>().rect.width * Mathf.Lerp(0.15f, 0.7f, Random.value), 0, 0, 0);
+        Destroy(pts.gameObject, 0.8f);
+    }
+
     //TODO(momin): combo system/momentum, losing points with more extreme momentum, lose flat # of points based on panels, game over on negative
     public VideoPanel HitTag(string tag) {
         var vid = VideoManager.Inst.Panels.Find(tag, (p, t) => p.Link.tag == t);
@@ -158,8 +172,10 @@ public class GameManager : Manager<GameManager> {
         return vid;
     }
     public void HitCorrect() {
-        Score += Math.Floor(Math.Pow(BaseScore, 1 + VideoManager.Inst.Panels.Count * Exponent));
+        var scoreToAdd = Math.Floor(Math.Pow(BaseScore, 1 + VideoManager.Inst.Panels.Count * Exponent));
+        Score += scoreToAdd;
         CorrectSound.Play(pitch: Mathf.Lerp(0.9f, 1.1f, Random.value));
+        Text(scoreToAdd);
     }
     public void HitWrong() {
         WrongMomentum++;
@@ -171,6 +187,7 @@ public class GameManager : Manager<GameManager> {
             Stop();
         } else {
             WrongSound.Play(pitch: Mathf.Lerp(0.9f, 1.1f, Random.value));
+            Text(scoreToLose);
         }
     }
 
