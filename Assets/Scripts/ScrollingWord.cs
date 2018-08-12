@@ -58,9 +58,14 @@ public class ScrollingWord : MonoBehaviour {
         {
             if (RelativePos.x < 0) {
                 if (VideoManager.Inst.Panels.Find(Tag, (p, t) => p.Link.tag == t)) {
+                    // good word, punish for losing
                     GameManager.Inst.HitWrong();
+                    GameManager.Inst.SpawnStatic(rt);
+                    Destroy(gameObject);
+                } else if (RelativePos.x < -0.4f) {
+                    // bad word, let it go longer
+                    Destroy(gameObject);
                 }
-                Destroy(gameObject);
             }
         }
     }

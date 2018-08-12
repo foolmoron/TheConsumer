@@ -13,6 +13,10 @@ public class GameManager : Manager<GameManager> {
     [Range(0, 2)]
     public float Exponent = 0.5f;
 
+    public GameObject StaticPrefab;
+    [Range(0, 5)]
+    public float StaticTime = 0.8f;
+
     new Camera camera;
     
     void Awake() {
@@ -25,17 +29,33 @@ public class GameManager : Manager<GameManager> {
             var hit = Physics2D.Raycast(wPos.withZ(-10), Vector3.forward, 100);
             if (hit.collider) {
                 Destroy(hit.collider.gameObject);
-                HitTag(hit.collider.GetComponent<ScrollingWord>().Tag);
+                if (HitTag(hit.collider.GetComponent<ScrollingWord>().Tag)) {
+
+                } else {
+                    SpawnStatic(hit.collider.GetComponent<RectTransform>());
+                }
             }
         }
     }
 
+    public void SpawnStatic(RectTransform rt) {
+        var stat = Instantiate(StaticPrefab, rt.parent);
+        var statT = stat.GetComponent<RectTransform>();
+        statT.anchorMin = rt.anchorMin;
+        statT.anchorMax = rt.anchorMax;
+        statT.anchoredPosition = rt.anchoredPosition;
+        statT.sizeDelta = rt.sizeDelta;
+        Destroy(stat.gameObject, StaticTime);
+    }
+
     //TODO(momin): combo system/momentum, losing points with more extreme momentum
-    public void HitTag(string tag) {
+    public bool HitTag(string tag) {
         if (VideoManager.Inst.Panels.Find(tag, (p, t) => p.Link.tag == t)) {
             HitCorrect();
+            return true;
         } else {
             HitWrong();
+            return false;
         }
     }
     public void HitCorrect() {

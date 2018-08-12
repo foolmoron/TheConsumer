@@ -1,4 +1,4 @@
-﻿Shader "Inverse"
+﻿Shader "Static"
 {
 	Properties
 	{
@@ -6,7 +6,7 @@
 	}
 	SubShader
 	{
-		Tags { "Queue" = "Geometry" "RenderType"="Opaque" }
+		Tags { "Queue" = "Transparent" "RenderType"="Opaque" }
 		LOD 100
 
 		Pass
@@ -44,19 +44,14 @@
 				return o;
 			}
 
-			// Keijiro's hue to rgb
-			half3 Hue2RGB(half h)
-			{
-				h = frac(h) * 6 - 2;
-				half3 rgb = saturate(half3(abs(h - 1) - 1, 2 - abs(h), 2 - abs(h - 2)));
-				return rgb;
-			}
-			
+            float rand(float n){ return frac(sin(n) * 43758.5453123); }
+
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 c = tex2D(_MainTex, i.uv);
 
-                fixed4 finalColor = 1 - c;
+                float lum = rand(i.uv.x + i.uv.y + _Time.w);
+                fixed4 finalColor = float4(lum, lum, lum, 1);
 
 				return finalColor;
 			}
