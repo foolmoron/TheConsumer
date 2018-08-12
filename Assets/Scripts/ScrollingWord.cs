@@ -9,7 +9,7 @@ public class ScrollingWord : MonoBehaviour {
     public string Tag;
 
     public TextMeshProUGUI TextMesh;
-    public Vector2 RelativePos = new Vector2(1.2f, 0.5f);
+    public Vector2 RelativePos = new Vector2(1.5f, 0.5f);
     public Vector2 RelativeVel = new Vector2(-0.1f, 0f);
 
     [Range(0, 5)]

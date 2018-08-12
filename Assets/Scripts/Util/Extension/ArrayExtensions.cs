@@ -28,7 +28,7 @@ public static class ArrayExtensions {
         var indexExceptRange = (indexStart + indexRange + Mathf.FloorToInt(UnityEngine.Random.value * (array.Count - indexRange))) % array.Count;
         return array[indexExceptRange];
     }
-    
+
     public static TArray RandomWhere<TArray, TItem>(this IList<TArray> array, TItem item, Func<TArray, TItem, bool> filterPredicate) {
         var items = Count(array, item, filterPredicate);
         var matchingItemToPick = Mathf.FloorToInt(UnityEngine.Random.value * items);
@@ -42,6 +42,21 @@ public static class ArrayExtensions {
             }
         }
         return default(TArray);
+    }
+
+    public static int RandomIndexWhere<T>(this IList<T> array, Func<T, bool> filterPredicate) {
+        var items = Count(array, filterPredicate);
+        var matchingItemToPick = Mathf.FloorToInt(UnityEngine.Random.value * items);
+        var matchingItems = 0;
+        for (int i = 0; i < array.Count; i++) {
+            if (filterPredicate(array[i])) {
+                if (matchingItems == matchingItemToPick) {
+                    return i;
+                }
+                matchingItems++;
+            }
+        }
+        return -1;
     }
 
     public static T RandomWhere<T>(this IList<T> array, Func<T, bool> filterPredicate) {

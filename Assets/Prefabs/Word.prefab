@@ -181,7 +181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Tag: 
   TextMesh: {fileID: 114008693500027678}
-  RelativePos: {x: 1.2, y: 0.5}
+  RelativePos: {x: 1.5, y: 0.5}
   RelativeVel: {x: -0.25, y: 0}
   FrameInterval: 0
 --- !u!222 &222432175198146318

@@ -163,10 +163,14 @@ public class WordManager : Manager<WordManager> {
     }
     readonly List<WordRequest> requests = new List<WordRequest>(10);
 
+    public int Lanes = 10;
+    GameObject[] lanes;
+
     void Awake() {
         for (int i = 0; i < WordContainer.childCount; i++) {
             Destroy(WordContainer.GetChild(i).gameObject);
         }
+        lanes = new GameObject[Lanes];
     }
 
     public string GrabWordForTag(string tag) {
@@ -182,16 +186,20 @@ public class WordManager : Manager<WordManager> {
 
     public void SpawnWord(string tag, string wordText) {
         if (wordText != null) {
-            wrongWordTime = WrongWordInterval * Mathf.Lerp(0.8f, 1.25f, Random.value);
-            var wordObj = Instantiate(WordPrefab);
-            var word = wordObj.GetComponent<ScrollingWord>();
-            word.Container = WordContainer;
-            word.transform.parent = WordContainer;
-            word.transform.localScale = Vector3.one;
-            word.RelativePos = word.RelativePos.withY(Random.value); //TODO(momin): use lane system
-            word.RelativeVel = word.RelativeVel.withX(word.RelativeVel.x * Mathf.Lerp(0.8f, 1.25f, Random.value));
-            word.SetTag(tag);
-            word.SetText(wordText);
+            var laneIndex = lanes.RandomIndexWhere(go => go == null);
+            if (laneIndex >= 0) {
+                wrongWordTime = WrongWordInterval * Mathf.Lerp(0.8f, 1.25f, Random.value);
+                var wordObj = Instantiate(WordPrefab);
+                var word = wordObj.GetComponent<ScrollingWord>();
+                word.Container = WordContainer;
+                word.transform.parent = WordContainer;
+                word.transform.localScale = Vector3.one;
+                word.RelativePos = word.RelativePos.withY(laneIndex * (1f / Lanes));
+                lanes[laneIndex] = wordObj;
+                word.RelativeVel = word.RelativeVel.withX(word.RelativeVel.x * Mathf.Lerp(0.8f, 1.25f, Random.value));
+                word.SetTag(tag);
+                word.SetText(wordText);
+            }
         } else {
             var panel = VideoManager.Inst.Panels.Find(tag, (p, t) => p.tag == t);
             if (panel) {
