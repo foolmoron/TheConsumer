@@ -16,6 +16,21 @@ public class GameManager : Manager<GameManager> {
     public float BaseScore = 4;
     [Range(0, 2)]
     public float Exponent = 0.5f;
+    [Range(0, 3f)]
+
+    public float InflationInterval = 1f;
+    [Range(0, 0.01f)]
+    public float InflationAmountPerStage = 0.005f;
+    float inflationTime;
+
+    [Range(0, 1)]
+    public float WrongPerc = 0.1f;
+    [Range(1, 3)]
+    public float WrongBase = 1.5f;
+    public int WrongMomentum;
+    [Range(0, 0.01f)]
+    public float WrongMomentumDecayInterval = 5f;
+    float wrongDecayTime;
 
     public GameObject StaticPrefab;
     [Range(0, 5)]
@@ -40,6 +55,8 @@ public class GameManager : Manager<GameManager> {
     public AudioClip CorrectSound;
     public AudioClip WrongSound;
 
+    public AudioSource WrongStatic;
+
     new Camera camera;
     new AudioSource audio;
     
@@ -61,7 +78,10 @@ public class GameManager : Manager<GameManager> {
                     var gtv = hit.collider.gameObject.AddComponent<GoToVideo>();
                     gtv.Target = vid;
                 } else {
-                    VideoManager.Inst.Panels.Find(hit.collider.GetComponent<ScrollingWord>().Tag, (p, t) => p.WrongTag == t).FlashColor(WrongColor);
+                    var wrongVid = VideoManager.Inst.Panels.Find(hit.collider.GetComponent<ScrollingWord>().Tag, (p, t) => p.WrongTag == t);
+                    if (wrongVid) {
+                        wrongVid.FlashColor(WrongColor);
+                    }
                     Destroy(hit.collider.gameObject);
                     SpawnStatic(hit.collider.GetComponent<RectTransform>());
                 }
@@ -73,12 +93,29 @@ public class GameManager : Manager<GameManager> {
                 ScoreContainer.SetActive(false);
                 HighestPanels = VideoManager.Inst.Panels.Count;
                 HighestPanelsTime = 0;
+                inflationTime = 0;
             }
             HighestPanelsTime += Time.deltaTime;
         }
         // inflation
         {
-            //TODO: compound inflation based on # of panels
+            if (VideoManager.Inst.Panels.Count > 0) {
+                inflationTime += Time.deltaTime;
+                if (inflationTime > InflationInterval) {
+                    inflationTime -= InflationInterval;
+                    var perc = VideoManager.Inst.Panels.Count * InflationAmountPerStage;
+                    Score += Score * perc;
+                }
+            }
+        }
+        // wrong decay
+        {
+            if (VideoManager.Inst.Panels.Count > 0) {
+                wrongDecayTime += Time.deltaTime;
+                if (wrongDecayTime > WrongMomentumDecayInterval) {
+                    WrongMomentum /= 2;
+                }
+            }
         }
         // end
         {
@@ -91,6 +128,7 @@ public class GameManager : Manager<GameManager> {
         }
         // audio
         audio.mute = timeToKillStaticEnd <= 0;
+        WrongStatic.volume = VideoManager.Inst.Panels.Count > 0 ? WrongMomentum / 5f : 0f;
         // shakers
         {
             ConsumeShaker.StrengthMult = Mathf.Min(6, HighestPanelsTime / 30f);
@@ -124,8 +162,16 @@ public class GameManager : Manager<GameManager> {
         CorrectSound.Play(pitch: Mathf.Lerp(0.9f, 1.1f, Random.value));
     }
     public void HitWrong() {
-        Score -= Math.Floor(Score / 2);
-        WrongSound.Play(pitch: Mathf.Lerp(0.9f, 1.1f, Random.value));
+        WrongMomentum++;
+        wrongDecayTime = 0;
+        var scoreToLose = Score * WrongPerc * (Math.Pow(WrongBase, WrongMomentum) - 1);
+        scoreToLose = Math.Max(2, scoreToLose);
+        Score -= scoreToLose;
+        if (Score < 0) {
+            Stop();
+        } else {
+            WrongSound.Play(pitch: Mathf.Lerp(0.9f, 1.1f, Random.value));
+        }
     }
 
     public void Stop() {
