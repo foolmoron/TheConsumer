@@ -28,10 +28,13 @@ public class GameManager : Manager<GameManager> {
             var wPos = camera.ScreenToWorldPoint(Input.mousePosition);
             var hit = Physics2D.Raycast(wPos.withZ(-10), Vector3.forward, 100);
             if (hit.collider) {
-                Destroy(hit.collider.gameObject);
-                if (HitTag(hit.collider.GetComponent<ScrollingWord>().Tag)) {
-
+                var vid = HitTag(hit.collider.GetComponent<ScrollingWord>().Tag);
+                if (vid) {
+                    Destroy(hit.collider.GetComponent<ScrollingWord>());
+                    var gtv = hit.collider.gameObject.AddComponent<GoToVideo>();
+                    gtv.Target = vid;
                 } else {
+                    Destroy(hit.collider.gameObject);
                     SpawnStatic(hit.collider.GetComponent<RectTransform>());
                 }
             }
@@ -49,14 +52,14 @@ public class GameManager : Manager<GameManager> {
     }
 
     //TODO(momin): combo system/momentum, losing points with more extreme momentum
-    public bool HitTag(string tag) {
-        if (VideoManager.Inst.Panels.Find(tag, (p, t) => p.Link.tag == t)) {
+    public VideoPanel HitTag(string tag) {
+        var vid = VideoManager.Inst.Panels.Find(tag, (p, t) => p.Link.tag == t);
+        if (vid) {
             HitCorrect();
-            return true;
         } else {
             HitWrong();
-            return false;
         }
+        return vid;
     }
     public void HitCorrect() {
         Score += Math.Floor(Math.Pow(BaseScore, 1 + VideoManager.Inst.Panels.Count * Exponent)) * 10;

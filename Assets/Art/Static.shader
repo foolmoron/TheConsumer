@@ -3,6 +3,10 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+        _FuzzinessX ("Fuzziness X", Float) = 100
+        _FuzzinessY ("Fuzziness Y", Float) = 1000
+        _ScaleX ("Scale X", Float) = 1
+        _ScaleY ("Scale Y", Float) = 3
 	}
 	SubShader
 	{
@@ -19,6 +23,10 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
+            float _FuzzinessX;
+            float _FuzzinessY;
+            float _ScaleX;
+            float _ScaleY;
 
 			struct appdata
 			{
@@ -50,7 +58,8 @@
 			{
 				fixed4 c = tex2D(_MainTex, i.uv);
 
-                float lum = rand(i.uv.x + i.uv.y + _Time.w);
+                i.uv.x += 2.0*sin(i.uv.y*0.2+_Time.w*0.1);
+                float lum = rand(_ScaleX*floor(i.uv.x*_FuzzinessX)/_FuzzinessX + _ScaleY*floor(i.uv.y*_FuzzinessY)/_FuzzinessY + abs(sin(_Time.w*0.15 + i.uv.y*0.003)));
                 fixed4 finalColor = float4(lum, lum, lum, 1);
 
 				return finalColor;

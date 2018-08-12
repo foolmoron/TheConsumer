@@ -164,13 +164,13 @@ public class WordManager : Manager<WordManager> {
     readonly List<WordRequest> requests = new List<WordRequest>(10);
 
     public int Lanes = 10;
-    GameObject[] lanes;
+    ScrollingWord[] lanes;
 
     void Awake() {
         for (int i = 0; i < WordContainer.childCount; i++) {
             Destroy(WordContainer.GetChild(i).gameObject);
         }
-        lanes = new GameObject[Lanes];
+        lanes = new ScrollingWord[Lanes];
     }
 
     public string GrabWordForTag(string tag) {
@@ -195,7 +195,7 @@ public class WordManager : Manager<WordManager> {
                 word.transform.parent = WordContainer;
                 word.transform.localScale = Vector3.one;
                 word.RelativePos = word.RelativePos.withY(laneIndex * (1f / Lanes));
-                lanes[laneIndex] = wordObj;
+                lanes[laneIndex] = word;
                 word.RelativeVel = word.RelativeVel.withX(word.RelativeVel.x * Mathf.Lerp(0.8f, 1.25f, Random.value));
                 word.SetTag(tag);
                 word.SetText(wordText);
