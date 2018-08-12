@@ -56,7 +56,7 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 c = tex2D(_MainTex, i.uv);
+                //i.uv = i.screen;
 
                 i.uv.x += 2.0*sin(i.uv.y*0.2+_Time.w*0.1);
                 float lum = rand(_ScaleX*floor(i.uv.x*_FuzzinessX)/_FuzzinessX + _ScaleY*floor(i.uv.y*_FuzzinessY)/_FuzzinessY + abs(sin(_Time.w*0.15 + i.uv.y*0.003)));

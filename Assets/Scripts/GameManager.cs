@@ -17,6 +17,9 @@ public class GameManager : Manager<GameManager> {
     [Range(0, 5)]
     public float StaticTime = 0.8f;
 
+    public Color CorrectColor = Color.green;
+    public Color WrongColor = Color.red;
+
     new Camera camera;
     
     void Awake() {
@@ -30,10 +33,12 @@ public class GameManager : Manager<GameManager> {
             if (hit.collider) {
                 var vid = HitTag(hit.collider.GetComponent<ScrollingWord>().Tag);
                 if (vid) {
+                    vid.FlashColor(CorrectColor);
                     Destroy(hit.collider.GetComponent<ScrollingWord>());
                     var gtv = hit.collider.gameObject.AddComponent<GoToVideo>();
                     gtv.Target = vid;
                 } else {
+                    VideoManager.Inst.Panels.Find(hit.collider.GetComponent<ScrollingWord>().Tag, (p, t) => p.WrongTag == t).FlashColor(WrongColor);
                     Destroy(hit.collider.gameObject);
                     SpawnStatic(hit.collider.GetComponent<RectTransform>());
                 }

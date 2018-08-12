@@ -314,6 +314,8 @@ MonoBehaviour:
   StaticPrefab: {fileID: 1645549211446354, guid: ea1d733c73ce4ce4bbf3180dde10e4b5,
     type: 2}
   StaticTime: 0.8
+  CorrectColor: {r: 0, g: 1, b: 0, a: 1}
+  WrongColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!4 &142645478
 Transform:
   m_ObjectHideFlags: 0
@@ -1264,7 +1266,7 @@ Prefab:
     - target: {fileID: 224766592636182332, guid: 4328b4537ea6fec40bbbb3989c0f71ff,
         type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224766592636182332, guid: 4328b4537ea6fec40bbbb3989c0f71ff,
         type: 2}
@@ -1384,7 +1386,7 @@ Prefab:
     - target: {fileID: 224945276707834152, guid: ea1d733c73ce4ce4bbf3180dde10e4b5,
         type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224945276707834152, guid: ea1d733c73ce4ce4bbf3180dde10e4b5,
         type: 2}
@@ -1559,6 +1561,16 @@ Prefab:
         type: 2}
       propertyPath: m_VideoPath
       value: https://archive.org/download/Consumin1967/Consumin1967_512kb.mp4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114830715067079032, guid: 4e60962f280fb024594bd859aa1a4a9d,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114830715067079032, guid: 4e60962f280fb024594bd859aa1a4a9d,
+        type: 2}
+      propertyPath: m_Color.b
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e60962f280fb024594bd859aa1a4a9d, type: 2}

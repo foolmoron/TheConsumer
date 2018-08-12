@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using RenderHeads.Media.AVProVideo;
+using UnityEngine.UI;
 
 public enum VideoState { None, Loading, Ready, Waiting, Playing, Error }
 public class VideoPanel : MonoBehaviour {
@@ -17,9 +18,17 @@ public class VideoPanel : MonoBehaviour {
     float timeout;
     float loadingTime;
 
+    [Range(0, 0.15f)]
+    public float FlashSpeed = 0.07f;
+    [Range(0, 1)]
+    public float FlashAlpha = 0.7f;
+
     public MediaPlayer Player;
+    public DisplayUGUI Display;
+    Image flash;
 
     void Awake() {
+        flash = GetComponentInChildren<Image>();
         timeout = InitialTimeout;
         Player.Events.AddListener((mp, e, code) => {
             switch (e) {
@@ -42,6 +51,10 @@ public class VideoPanel : MonoBehaviour {
     }
 
     void Start() {
+    }
+
+    public void FlashColor(Color color) {
+        flash.color = color.withAlpha(FlashAlpha);
     }
 
     void Update() {
@@ -74,5 +87,7 @@ public class VideoPanel : MonoBehaviour {
                 Player.Play();
                 break;
         }
+        // color
+        flash.color = flash.color.withAlpha(Mathf.Lerp(flash.color.a, 0, FlashSpeed));
     }
 }
