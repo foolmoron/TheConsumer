@@ -6,6 +6,8 @@ public class Shaker : MonoBehaviour {
     public bool Shaking = false;
     [Range(0, 1)]
     public float Strength = 0.05f;
+    [Range(0, 20)]
+    public float StrengthMult = 1f;
     [Range(1, 10)]
     public int FrameInterval = 1;
 
@@ -14,6 +16,12 @@ public class Shaker : MonoBehaviour {
 
     int frameCount;
     Vector3 previousShake;
+
+    void Awake() {
+        if (Shaking) {
+            frameShaking = false;
+        }
+    }
 
     void Update() {
         if (!frameShaking && Time.deltaTime == 0) // still run update if shaking by frames
@@ -39,7 +47,7 @@ public class Shaker : MonoBehaviour {
 
     void Shake() {
         transform.localPosition -= previousShake;
-        Vector3 shake = Random.insideUnitCircle.normalized * Strength;
+        Vector3 shake = Random.insideUnitCircle.normalized * Strength * StrengthMult;
         transform.localPosition += shake;
         previousShake = shake;
     }

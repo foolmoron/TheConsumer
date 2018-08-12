@@ -33,6 +33,10 @@ public class GameManager : Manager<GameManager> {
     public TextMeshProUGUI AllScoresText;
     public TextMeshProUGUI OpinionText;
 
+    public Shaker ConsumeShaker;
+    public Shaker ConsumeTextShaker;
+    public Shaker OffShaker;
+
     public AudioClip CorrectSound;
     public AudioClip WrongSound;
 
@@ -87,6 +91,12 @@ public class GameManager : Manager<GameManager> {
         }
         // audio
         audio.mute = timeToKillStaticEnd <= 0;
+        // shakers
+        {
+            ConsumeShaker.StrengthMult = Mathf.Min(6, HighestPanelsTime / 30f);
+            ConsumeTextShaker.StrengthMult = Mathf.Min(6, HighestPanelsTime / 30f);
+            OffShaker.StrengthMult = Mathf.Min(6, VideoManager.Inst.Panels.Count / 2f);
+        }
     }
 
     public void SpawnStatic(RectTransform rt) {
