@@ -13,7 +13,7 @@ public class ScrollingWord : MonoBehaviour {
     public Vector2 RelativeVel = new Vector2(-0.1f, 0f);
 
     [Range(0, 5)]
-    public int FrameInterval = 4;
+    public int FrameInterval = 2;
     int frame;
 
     public RectTransform Container { get; set; }
@@ -39,7 +39,7 @@ public class ScrollingWord : MonoBehaviour {
 
     public void SetTag(string tag) {
         Tag = tag;
-        TextMesh.fontSharedMaterial = WordManager.Inst.MaterialsForTag[tag];
+        WordManager.Inst.ModsForTag[tag].Apply(this);
     }
 
     void Update() {
@@ -49,7 +49,7 @@ public class ScrollingWord : MonoBehaviour {
         }
         // position based on container dimensions, skipping frames for effect
         {
-            frame = (frame + 1) % FrameInterval;
+            frame = FrameInterval > 0 ? (frame + 1) % FrameInterval : 0;
             if (frame == 0) {
                 rt.anchoredPosition = RelativePos * Container.rect.size;
             }

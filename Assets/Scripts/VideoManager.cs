@@ -58,13 +58,14 @@ public class VideoManager : Manager<VideoManager> {
 
         var panel = nextVideoPanel;
         nextVideoPanel = null;
-        SetupNextVideo();
 
         panel.transform.parent = PanelContainer.transform;
         panel.transform.SetAsFirstSibling();
         var vid = panel.GetComponent<VideoPanel>();
         vid.ShouldPlay = true;
         Panels.Add(vid);
+
+        SetupNextVideo();
     }
 
     public void Stop() {
