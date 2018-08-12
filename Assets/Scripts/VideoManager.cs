@@ -41,11 +41,17 @@ public class VideoManager : Manager<VideoManager> {
 
     void SetupNextVideo() {
         nextVideoPanel = Instantiate(VideoPanelPrefab);
-        nextVideoPanel.GetComponent<VideoPanel>().ShouldPlay = true;
         nextVideoPanel.transform.parent = transform;
+        var vid = nextVideoPanel.GetComponent<VideoPanel>();
+        vid.Index = Panels.Count;
+        vid.WrongTag = GetUnusedLink().tag; // one wrong tag for each new video
     }
 
     public void StartNextVideo() {
+        if (Panels.Count >= 32) {
+            return;
+        }
+
         if (nextVideoPanel == null) {
             SetupNextVideo();
         }
@@ -56,7 +62,9 @@ public class VideoManager : Manager<VideoManager> {
 
         panel.transform.parent = PanelContainer.transform;
         panel.transform.SetAsFirstSibling();
-        Panels.Add(panel.GetComponent<VideoPanel>());
+        var vid = panel.GetComponent<VideoPanel>();
+        vid.ShouldPlay = true;
+        Panels.Add(vid);
     }
 
     public void Stop() {

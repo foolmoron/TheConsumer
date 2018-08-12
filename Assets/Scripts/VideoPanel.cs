@@ -6,7 +6,10 @@ using RenderHeads.Media.AVProVideo;
 public enum VideoState { None, Loading, Ready, Waiting, Playing, Error }
 public class VideoPanel : MonoBehaviour {
 
+    [Range(0, 15)]
+    public int Index;
     public VideoLink Link;
+    public string WrongTag;
     public VideoState CurrentState = VideoState.None;
     public bool ShouldPlay;
     [Range(0, 10)]
@@ -31,6 +34,7 @@ public class VideoPanel : MonoBehaviour {
                     CurrentState = VideoState.Ready;
                     break;
                 case MediaPlayerEvent.EventType.Started:
+                    WordManager.Inst.CreateMaterialsForTagPair(Index, Link.tag, WrongTag);
                     CurrentState = VideoState.Playing;
                     break;
             }
