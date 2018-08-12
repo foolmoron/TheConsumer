@@ -317,7 +317,7 @@ MonoBehaviour:
   InflationInterval: 1
   InflationAmountPerStage: 0.005
   WrongPerc: 0.1
-  WrongBase: 1.5
+  WrongBase: 1.78
   WrongMomentum: 0
   WrongMomentumDecayInterval: 5
   StaticPrefab: {fileID: 1645549211446354, guid: ea1d733c73ce4ce4bbf3180dde10e4b5,
@@ -2797,8 +2797,8 @@ MonoBehaviour:
   BaseUrl: https://api.datamuse.com/words?max=10&ml=
   WordPrefab: {fileID: 1225418058051736, guid: 4328b4537ea6fec40bbbb3989c0f71ff, type: 2}
   WordContainer: {fileID: 1715762059}
-  CorrectWordInterval: 1.5
-  WrongWordInterval: 0.9
+  CorrectWordInterval: 2.73
+  WrongWordInterval: 1.6
   Lanes: 10
 --- !u!4 &1945537038
 Transform:

@@ -108,7 +108,9 @@ public class GameManager : Manager<GameManager> {
                 if (inflationTime > InflationInterval) {
                     inflationTime -= InflationInterval;
                     var perc = VideoManager.Inst.Panels.Count * InflationAmountPerStage;
-                    Score += Score * perc;
+                    var score = Math.Max(1, Score * perc);
+                    Score += score;
+                    Text(score);
                 }
             }
         }
@@ -153,7 +155,7 @@ public class GameManager : Manager<GameManager> {
 
     public void Text(double val) {
         var pts = Instantiate(PointsPrefab, ScoreContainer.transform.parent);
-        pts.GetComponent<TextMeshProUGUI>().color = PointsWrong;
+        pts.GetComponent<TextMeshProUGUI>().color = (val > 0 ? PointsCorrect : PointsWrong);
         pts.GetComponent<TextMeshProUGUI>().text = (val > 0 ? "+" : "-") + (long)Math.Abs(val) + "0";
         var rt = pts.GetComponent<RectTransform>();
         rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, rt.anchoredPosition.y * Mathf.Lerp(0.9f, 1.2f, Random.value));
@@ -187,7 +189,7 @@ public class GameManager : Manager<GameManager> {
             Stop();
         } else {
             WrongSound.Play(pitch: Mathf.Lerp(0.9f, 1.1f, Random.value));
-            Text(scoreToLose);
+            Text(-scoreToLose);
         }
     }
 
@@ -212,9 +214,9 @@ public class GameManager : Manager<GameManager> {
         // display score
         ScoreContainer.SetActive(true);
         AllScoresText.text = 
-            $"You gained {score} awareness\n" +
+            $"You gained {score}0 awareness\n" +
             $"You consumed {HighestPanels} panel{(HighestPanels == 1 ? "" : "s")} for {HighestPanelsTime:0.00} seconds\n\n" +
-            $"Best awareness: {PlayerPrefs.GetString("high")}\n" +
+            $"Best awareness: {PlayerPrefs.GetString("high")}0\n" +
             $"Best consumption: {PlayerPrefs.GetInt("panels")}p x {PlayerPrefs.GetFloat("time"):0.00}s"
             ;
         OpinionText.text = "Hey";

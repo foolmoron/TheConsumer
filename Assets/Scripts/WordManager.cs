@@ -131,10 +131,10 @@ public class WordManager : Manager<WordManager> {
 
     public GameObject WordPrefab;
     public RectTransform WordContainer;
-    [Range(0, 3)]
+    [Range(0, 10)]
     public float CorrectWordInterval = 1.5f;
     float correctWordTime;
-    [Range(0, 3)]
+    [Range(0, 10)]
     public float WrongWordInterval = 0.9f;
     float wrongWordTime;
 
@@ -249,7 +249,7 @@ public class WordManager : Manager<WordManager> {
             if (playingPanel != null) {
                 var correctWord = GrabWordForTag(playingPanel.Link.tag);
                 SpawnWord(playingPanel.Link.tag, correctWord);
-                correctWordTime = CorrectWordInterval * Mathf.Lerp(0.8f, 1.25f, Random.value);
+                correctWordTime = CorrectWordInterval * Mathf.Lerp(0.8f, 1.25f, Random.value) * Mathf.Pow(0.92f, VideoManager.Inst.Panels.Count);
             }
         }
         wrongWordTime -= Time.deltaTime;
@@ -258,7 +258,7 @@ public class WordManager : Manager<WordManager> {
             if (playingPanel != null) {
                 var wrongWord = GrabWordForTag(playingPanel.WrongTag);
                 SpawnWord(playingPanel.WrongTag, wrongWord);
-                wrongWordTime = WrongWordInterval * Mathf.Lerp(0.8f, 1.25f, Random.value);
+                wrongWordTime = WrongWordInterval * Mathf.Lerp(0.8f, 1.25f, Random.value) * Mathf.Pow(0.92f, VideoManager.Inst.Panels.Count);
             }
         }
     }
