@@ -28,6 +28,8 @@ public class VideoManager : Manager<VideoManager> {
 
     public AudioClip NewVidSound;
 
+    public GameObject StartContainer;
+
     void Awake() {
         Links = JsonUtility.FromJson<VideoLinks>(DataJSON.text).links;
         var existingPanels = PanelContainer.GetComponentsInChildren<VideoPanel>();
@@ -53,6 +55,8 @@ public class VideoManager : Manager<VideoManager> {
         if (Panels.Count >= 32) {
             return;
         }
+
+        StartContainer.SetActive(false);
 
         if (nextVideoPanel == null) {
             SetupNextVideo();

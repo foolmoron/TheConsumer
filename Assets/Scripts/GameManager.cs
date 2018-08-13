@@ -214,7 +214,7 @@ public class GameManager : Manager<GameManager> {
         // display score
         ScoreContainer.SetActive(true);
         AllScoresText.text = 
-            $"You gained {score}0 awareness\n" +
+            $"You are {score}0 aware\n" +
             $"You consumed {HighestPanels} panel{(HighestPanels == 1 ? "" : "s")} for {HighestPanelsTime:0.00} seconds\n\n" +
             $"Best awareness: {PlayerPrefs.GetString("high")}0\n" +
             $"Best consumption: {PlayerPrefs.GetInt("panels")}p x {PlayerPrefs.GetFloat("time"):0.00}s"
